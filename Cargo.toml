@@ -1,6 +1,6 @@
 [package]
 name = "prompts"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Jasmin Bom <jsmnbom@gmail.com>", "Cayle Sharrock <CjS77>"]
 edition = "2018"
 description = "Interactive prompts for the command line"
