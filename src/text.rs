@@ -188,7 +188,7 @@ impl Prompt<String> for TextPrompt {
         )?;
         if !self.state.is_done() {
             let input_column =
-                (2 + self.message.len() + 3 + (self.cursor * self.style.cursor_mult()) + 1) as u16;
+                (2 + self.message.chars().count() + 3 + (self.cursor * self.style.cursor_mult()) + 1) as u16;
 
             queue!(stdout, Print(self.style.transform(&self.input)),)?;
             match &self.error {

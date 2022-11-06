@@ -3,7 +3,7 @@ use prompts::{text::TextPrompt, Prompt};
 #[tokio::main]
 async fn main() {
     // Prepare the prompt
-    let mut prompt = TextPrompt::new("What is your name?");
+    let mut prompt = TextPrompt::new("👨 What is your name?");
 
     println!("Running prompt: {:?}", prompt);
 

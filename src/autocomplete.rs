@@ -161,7 +161,7 @@ impl<T: std::clone::Clone + std::marker::Send + std::fmt::Display> Prompt<T>
             PrintStyledContent(style(&self.message).attribute(Attribute::Bold))
         )?;
         if !self.state.is_done() {
-            let input_column = (2 + self.message.len() + 3 + self.cursor + 1) as u16;
+            let input_column = (2 + self.message.chars().count() + 3 + self.cursor + 1) as u16;
 
             queue!(
                 stdout,
