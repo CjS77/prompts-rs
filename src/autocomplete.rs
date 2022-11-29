@@ -1,6 +1,6 @@
 //! Interactive prompt where the user chooses from a filterable list of options
 
-use crate::utils::simple_filter;
+use crate::utils::contains_filter_vec;
 use crate::{
     utils::{
         calc_entries, is_abort_event, print_input_icon, print_state_icon, Figures, PromptState,
@@ -25,7 +25,7 @@ use std::io::{stdout, Write};
 ///
 /// Shows a list of options. Use <kbd>up</kbd>/<kbd>down</kbd> to navigate
 /// and <kbd>enter</kbd> to submit. Type anything to filter the list.
-/// The default filter will simply check the choices start with the input's .to_string().
+/// The default filter will simply check the choices contain the input's .to_string().
 /// The data vector can have a custom type but it must implement
 /// `std::fmt::Display` as well as `std::clone::Clone` and `std::marker::Send`.
 ///
@@ -83,7 +83,7 @@ impl<T: std::clone::Clone + std::marker::Send + std::fmt::Display> AutocompleteP
             limit: 10,
             input: "".to_string(),
             cursor: 0,
-            filter: simple_filter,
+            filter: contains_filter_vec,
         }
     }
 }

@@ -155,6 +155,19 @@ pub fn simple_filter<T: std::clone::Clone + std::fmt::Display>(
         .collect()
 }
 
+/// Filter that filters all entries that contain the
+/// input based on the to_string of the object
+pub fn contains_filter_vec<T: std::clone::Clone + std::fmt::Display>(
+    input: &str,
+    choices: &Vec<T>,
+) -> Vec<T> {
+    choices
+        .iter()
+        .filter(|choice| choice.to_string().contains(input))
+        .cloned()
+        .collect()
+}
+
 /// Filter that simply filters all entries that contain the
 /// input based on the to_string of the object
 pub fn contains_filter<T: std::fmt::Display>(input: &str, choice: &T) -> bool {
