@@ -287,12 +287,15 @@ impl<T: std::clone::Clone + std::marker::Send + std::fmt::Display + std::cmp::Pa
                         }
                     }
                 }
-                KeyCode::Char(c) => {
-                    self.search_str.insert(self.cursor, c);
-                    self.cursor += 1;
-                }
                 _ => {}
             }
+        }
+        match event.code {
+            KeyCode::Char(c) => {
+                self.search_str.insert(self.cursor, c);
+                self.cursor += 1;
+            }
+            _ => {}
         }
     }
 }

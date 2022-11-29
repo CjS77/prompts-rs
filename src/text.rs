@@ -23,6 +23,7 @@ pub enum Style {
     Password,
     Invisible,
 }
+
 impl Style {
     fn transform(&self, input: &str) -> String {
         match self {
@@ -39,6 +40,7 @@ impl Style {
         }
     }
 }
+
 impl Default for Style {
     fn default() -> Style {
         Style::Normal
@@ -58,7 +60,6 @@ impl Default for Style {
 ///     Err(e) => println!("Some kind of crossterm error happened: {:?}", e),
 /// }
 /// ```
-
 #[derive(Default)]
 pub struct TextPrompt {
     message: String,
@@ -69,6 +70,7 @@ pub struct TextPrompt {
     validator: Option<fn(input: &str) -> std::result::Result<(), String>>,
     error: Option<String>,
 }
+
 impl fmt::Debug for TextPrompt {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.debug_struct("TextPrompt")
@@ -87,6 +89,7 @@ impl fmt::Debug for TextPrompt {
             .finish()
     }
 }
+
 impl TextPrompt {
     /// Returns a TextPrompt ready to be run
     ///
@@ -127,6 +130,7 @@ impl TextPrompt {
         self
     }
 }
+
 #[async_trait]
 impl Prompt<String> for TextPrompt {
     async fn run(&mut self) -> std::result::Result<Option<String>, crossterm::ErrorKind> {
@@ -236,12 +240,16 @@ impl Prompt<String> for TextPrompt {
                 KeyCode::End => {
                     self.cursor = self.input.len();
                 }
-                KeyCode::Char(c) => {
-                    self.input.insert(self.cursor, c);
-                    self.cursor += 1;
-                }
+
                 _ => {}
             }
+        }
+        match event.code {
+            KeyCode::Char(c) => {
+                self.input.insert(self.cursor, c);
+                self.cursor += 1;
+            }
+            _ => {}
         }
     }
 }

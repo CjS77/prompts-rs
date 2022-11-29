@@ -255,12 +255,15 @@ impl<T: std::clone::Clone + std::marker::Send + std::fmt::Display> Prompt<T>
                 KeyCode::Right => {
                     self.cursor = cmp::min(self.cursor + 1, self.input.len());
                 }
-                KeyCode::Char(c) => {
-                    self.input.insert(self.cursor, c);
-                    self.cursor += 1;
-                }
                 _ => {}
             }
+        }
+        match event.code {
+            KeyCode::Char(c) => {
+                self.input.insert(self.cursor, c);
+                self.cursor += 1;
+            }
+            _ => {}
         }
     }
 }
