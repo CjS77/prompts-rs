@@ -14,7 +14,9 @@ use crossterm::{
     event::{Event, EventStream, KeyCode, KeyEvent, KeyModifiers},
     queue,
     style::{style, Attribute, Color, Print, Stylize},
-    terminal::{disable_raw_mode, enable_raw_mode, size as terminal_size, Clear, ClearType},
+    terminal::{
+        disable_raw_mode, enable_raw_mode, size as terminal_size, Clear, ClearType, ScrollUp,
+    },
 };
 use futures::StreamExt;
 use std::cmp;
@@ -53,6 +55,7 @@ pub struct AutocompletePrompt<T: std::clone::Clone + std::marker::Send + std::fm
     cursor: usize,
     filter: fn(input: &str, choices: &Vec<T>) -> Vec<T>,
 }
+
 impl<T: std::fmt::Debug + std::clone::Clone + std::marker::Send + std::fmt::Display> fmt::Debug
     for AutocompletePrompt<T>
 {
@@ -64,6 +67,7 @@ impl<T: std::fmt::Debug + std::clone::Clone + std::marker::Send + std::fmt::Disp
             .finish()
     }
 }
+
 impl<T: std::clone::Clone + std::marker::Send + std::fmt::Display> AutocompletePrompt<T> {
     /// Returns a AutocompletePrompt ready to be run
     ///
@@ -87,6 +91,7 @@ impl<T: std::clone::Clone + std::marker::Send + std::fmt::Display> AutocompleteP
         }
     }
 }
+
 #[async_trait]
 impl<T: std::clone::Clone + std::marker::Send + std::fmt::Display> Prompt<T>
     for AutocompletePrompt<T>
@@ -131,7 +136,7 @@ impl<T: std::clone::Clone + std::marker::Send + std::fmt::Display> Prompt<T>
         let mut stdout = stdout();
 
         let filtered_choices = (self.filter)(&self.input, &self.choices);
-
+        let max_rows = terminal_size()?.1;
         self.current = cmp::min(
             self.current,
             filtered_choices.len().checked_sub(1).unwrap_or(0),
@@ -140,11 +145,14 @@ impl<T: std::clone::Clone + std::marker::Send + std::fmt::Display> Prompt<T>
         let (start_index, end_index) = calc_entries(
             self.current,
             filtered_choices.len(),
-            cmp::min(self.limit, (terminal_size()?.1 - 1) as usize),
+            cmp::min(self.limit, (max_rows - 1) as usize),
         );
 
         if self.state == PromptState::Created {
             self.state = PromptState::Running;
+            // Clear enough space for the selection list
+            let height = (self.limit.min(filtered_choices.len()) + 1) as u16;
+            queue!(stdout, ScrollUp(height), cursor::MoveUp(height),)?;
         } else {
             queue!(
                 stdout,

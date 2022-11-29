@@ -1,12 +1,14 @@
+use prompts::text::TextPrompt;
 use prompts::{autocomplete::AutocompletePrompt, Prompt};
 
 #[tokio::main]
 async fn main() {
     let data = vec![
         "The", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog", "lorem", "ipsum",
-        "dolar", "sit",
+        "dolar", "sit", "rower", "theme",
     ];
 
+    let _ = TextPrompt::new("Enter anything").run().await;
     // Prepare the prompt
     let mut prompt = AutocompletePrompt::new("Choose a word", data);
 
