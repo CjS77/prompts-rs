@@ -148,7 +148,6 @@ impl<T: std::clone::Clone + std::marker::Send + std::fmt::Display> Prompt<T>
         } else {
             queue!(
                 stdout,
-                cursor::MoveUp((end_index - start_index) as u16),
                 cursor::MoveToColumn(0),
                 Clear(ClearType::FromCursorDown)
             )?;
